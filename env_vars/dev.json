@@ -1,0 +1,5 @@
+{
+    "SampleFunction": {
+        "NODE_ENV" : "dev"
+    }
+}

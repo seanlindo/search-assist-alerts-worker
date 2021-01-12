@@ -1,0 +1,95 @@
+{
+  "name": "lambda_boilerplate",
+  "version": "0.0.1",
+  "license": "UNLICENSED",
+  "description": "",
+  "author": "Sean Lindo",
+  "main": "index.js",
+  "repository": "https://github.com/EngageTalent/lambda_boilerplate",
+  "scripts": {
+    "build": "zip -X -r deployment_bundle.zip env_vars node_modules src tests index.js package.json && aws s3 cp deployment_bundle.zip s3://engage-talent-lambda/bs_boilerplate",
+    "clean": "rm -f deployment_bundle.zip && rm -rf deployment_bundle && mkdir deployment_bundle",
+    "deploy": "npm run build && aws lambda update-function-code --function-name bs_boilerplate --s3-bucket engage-talent-lambda --s3-key bs_boilerplate",
+    "lint": "./node_modules/.bin/eslint index.js src/**/*.js",
+    "prebuild": "npm run clean && npm run lint",
+    "start": "sam local invoke -n env_vars/dev.json --event event.json",
+    "test": "SUPPRESS_NO_CONFIG_WARNING='y' jest tests/unit",
+    "test:full": "SUPPRESS_NO_CONFIG_WARNING='y' jest tests/*"
+  },
+  "dependencies": {
+    "@engage_admin/scoring-threshold": "^2.6.1",
+    "@sendgrid/mail": "^7.4.1",
+    "aws-sdk": "^2.825.0",
+    "axios": "^0.21.1",
+    "babel-polyfill": "^6.26.0",
+    "dotenv": "^8.2.0",
+    "elasticsearch": "^16.7.2",
+    "fs-sync": "^1.0.6",
+    "handlebars": "^4.7.6",
+    "jsonwebtoken": "^8.5.1",
+    "pg-promise": "^8.7.2",
+    "query-string": "^6.13.8",
+    "serialize-error": "^4.1.0",
+    "sqs-producer": "^2.1.0",
+    "winston": "^2.4.2",
+    "winston-papertrail": "^1.0.5"
+  },
+  "devDependencies": {
+    "@types/jest": "^24.0.15",
+    "babel-eslint": "^10.0.1",
+    "babel-jest": "^26.6.3",
+    "eslint": "^6.8.0",
+    "eslint-plugin-jest": "^23.1.1",
+    "jest": "^24.9.0"
+  },
+  "eslintConfig": {
+    "env": {
+      "es6": true,
+      "node": true,
+      "jest": true
+    },
+    "plugins": [
+      "jest"
+    ],
+    "parser": "babel-eslint",
+    "extends": [
+      "eslint:recommended"
+    ],
+    "parserOptions": {
+      "sourceType": "module"
+    },
+    "rules": {
+      "indent": [
+        "error",
+        4,
+        {
+          "SwitchCase": 1
+        }
+      ],
+      "linebreak-style": [
+        "error",
+        "unix"
+      ],
+      "quotes": [
+        "error",
+        "single"
+      ],
+      "semi": [
+        "error",
+        "never"
+      ]
+    }
+  },
+  "jest": {
+    "moduleFileExtensions": [
+      "js"
+    ],
+    "collectCoverage": true,
+    "collectCoverageFrom": [
+      "src/**/*.js",
+      "!src/utils/db.js",
+      "!src/utils/logger.js"
+    ],
+    "testTimeout": 10000
+  }
+}

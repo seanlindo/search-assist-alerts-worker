@@ -1,0 +1,8 @@
+.DS_Store
+coverage
+config/*.json
+deployment_bundle.zip
+node_modules
+yarn-error.log
+.env
+coverage
